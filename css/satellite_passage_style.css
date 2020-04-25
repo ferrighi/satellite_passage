@@ -7,20 +7,28 @@
   height: 1px;
   width: 1px;
   z-index: 100;
-  left: 200px;
-  top: 100px;
 }
 .block-satellite-passage .popover {
   max-width: unset;
-  left: 200px;
-  top: 100px;
+  position: absolute;
+  z-index: 1010;
+  padding: 7px;
+  text-align: left;
+  white-space: normal;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  background-clip: padding-box;
 }
 .block-satellite-passage .popover table tr td {
   padding: 2px;
   font-size: 14px;
 }
-.block-satellite-passage .popover.top {
-  left:10px;
+.block-satellite-passage .popover.top.in {
+  left:unset !important;
 }
 .block-satellite-passage .popover.top .arrow{
   display: none;

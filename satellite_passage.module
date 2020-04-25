@@ -1,5 +1,9 @@
 <?php
 
+function satellite_passage_init() {
+}
+
+
 function satellite_passage_block_info() {
    $blocks = array();
    $blocks['satellite_passage_block'] = array(
@@ -41,15 +45,15 @@ function satellite_passage_main_content(){
    $site_name = variable_get('site_name', 'Default');
 
    $mpath = drupal_get_path('module', 'satellite_passage');
-   $ol5_path = libraries_get_path('openlayers5');
-   $ol_switcher_path = libraries_get_path('ol-layerswitcher');
    $jq_path = drupal_get_path('module', 'jquery_update');
    drupal_add_js($jq_path . '/replace/jquery/1.10/jquery.min.js');
+
+   $ol5_path = libraries_get_path('openlayers5');
+   $ol_switcher_path = libraries_get_path('ol-layerswitcher');
  
    drupal_add_css($mpath . '/css/satellite_passage_style.css');
    drupal_add_css($ol5_path . '/css/ol.css');
    drupal_add_css($ol_switcher_path . '/src/ol-layerswitcher.css');
-   drupal_add_css($ol5_path . '/apidoc/styles/bootstrap.min.css');
  
    drupal_add_js($ol5_path . '/build/ol.js');
    drupal_add_js($ol_switcher_path . '/dist/ol-layerswitcher.js');
