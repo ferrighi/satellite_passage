@@ -1,116 +1,48 @@
 <?php
 
-function satellite_passage_permission() {
- return array(
-   'edit my settings' => array(
-     'title' => t('Edit My Settings'), 
-     'description' => t('Edit My Custom Settings Page'),
-  ),
- );
-}
-
-
-
 function satellite_passage_block_info() {
- $blocks = array();
- $blocks['satellite_passage_block'] = array(
-  'info' => t('Sentinel Passage'),
- );
- return $blocks;
+   $blocks = array();
+   $blocks['satellite_passage_block'] = array(
+      'info' => t('Sentinel Passage'),
+   );
+   return $blocks;
 }
 
 function satellite_passage_block_view($delta='') {
- $block = array();
- switch ($delta) {
-  case 'satellite_passage_block':
-   //$block['subject'] = t('Sentinel Passage'); // set the subject of the block (Can have the block name from drupal)
-   $block['content'] = satellite_passage_main_content(); // set the content of the block to our satellite_passage_main_content
-   break;
- }
- return $block;
+   $block = array();
+   switch ($delta) {
+      case 'satellite_passage_block':
+      $block['content'] = satellite_passage_main_content(); // set the content of the block to our satellite_passage_main_content
+      break;
+   }
+   return $block;
 }
 
 
-   // <link rel="stylesheet" href="https://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
-   // <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-   // <script src="https://openlayers.org/en/v3.20.1/build/ol.js" type="text/javascript"></script>
-   // <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
-   // <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-   // <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.1/proj4.js"></script>
 function satellite_passage_main_content(){
 
-return '
-<!doctype html>                                                                                                                                                                                                         
-<html lang="en">                                                                                                                                                                                                        
-  <head>                                                                                                                                          
-    <link rel="stylesheet" href="/sites/satellittdata.metsis.met.no/libraries/openlayers3/css/ol.css" type="text/css">
-    <link rel="stylesheet" href="/sites/satellittdata.metsis.met.no/libraries/openlayers3/apidoc/styles/bootstrap.min.css">
-    <link rel="stylesheet" href="/sites/satellittdata.metsis.met.no/libraries/ol3-layerswitcher/src/ol3-layerswitcher.css">
-    <script src="/sites/satellittdata.metsis.met.no/libraries/openlayers3/build/ol.js" type="text/javascript"></script>
-    <script src="/sites/all/modules/jquery_update/replace/jquery/1.10/jquery.min.js"></script>
-    <script src="/sites/satellittdata.metsis.met.no/libraries/openlayers3/apidoc/scripts/bootstrap.min.js"></script>
-    <script src="/sites/satellittdata.metsis.met.no/libraries/ol3-layerswitcher/src/ol3-layerswitcher.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.1/proj4.js"></script>
-<style>
-      .map {
-        height: 500px;
-        width: 100%;
-        margin: auto;
-      }
-      #info {
-        height: 1px;
-        width: 1px;
-        z-index: 100;
-        left: 200px;
-        top: 100px;
-      }
-      .popover {
-        max-width: unset;
-        left: 200px;
-        top: 100px;
-      }
-      .popover table tr td {
-        padding: 0 2px 0 2px;
-      }
-      .popover.top {
-        left:10px;
-      }
-      .popover.top .arrow{
-        display: none;
-      }
+   $site_name = variable_get('site_name', 'Default');
 
-      #timeStart-kml,#timeEnd-kml {
-        vertical-align: middle; 
-        background: #d3d3d3;
-        border-radius: 5px; 
-      }
-#timeStart-kml::-moz-range-thumb,
-#timeEnd-kml::-moz-range-thumb  {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%; 
-    background: #81b6da;
-    border-color: #000;
-    border-width: 1px;
-    cursor: pointer;
-}
-      .controls {
-         text-align: center;
-      }
-      .date {
-         border:unset;
-         width: 300px;
-      }
-      .ol-mouse-position {
-         font-size: 14px;
-         background-color: rgba(0,89,163,0.5);
-         border-radius: 4px;
-         padding: 2px;
-         color: #000;
-      }
-    </style>
-  </head>
-  <body>
+   $mpath = drupal_get_path('module', 'satellite_passage');
+   $ol5_path = libraries_get_path('openlayers5');
+   $ol_switcher_path = libraries_get_path('ol-layerswitcher');
+   $jq_path = drupal_get_path('module', 'jquery_update');
+ 
+   drupal_add_css($mpath . '/css/satellite_passage_style.css');
+   drupal_add_css($ol5_path . '/css/ol.css');
+   drupal_add_css($ol_switcher_path . '/scr/ol-layerswitcher.css');
+ 
+   drupal_add_js($ol5_path . '/build/ol.js');
+   drupal_add_js($ol_switcher_path . '/build/ol-layerswitcher.js');
+   drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js', 'external');
+   drupal_add_js(array('site_name' => $site_name), 'setting');
+
+
+    //<link rel="stylesheet" href="/sites/satellittdata.metsis.met.no/libraries/openlayers3/apidoc/styles/bootstrap.min.css">
+    //<script src="/sites/all/modules/jquery_update/replace/jquery/1.10/jquery.min.js"></script>
+    //<script src="/sites/satellittdata.metsis.met.no/libraries/openlayers3/apidoc/scripts/bootstrap.min.js"></script>
+
+return '
     <div id="map" class="map"></div>
     <div id="info"></div>
 
@@ -127,9 +59,7 @@ return '
         <input id="timeEnd-kml" type="range" min="0" max="100" value="100"/>
     </div>
 
-    <script type="text/javascript" src="/sites/satellittdata.metsis.met.no/modules/satellite_passage/js/olmap_slider.js"></script>
-  </body>
-</html>
+    <script type="text/javascript" src="/'.$mpath.'/js/satellite_passage.js"></script>
 ';
 
 }

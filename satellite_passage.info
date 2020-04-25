@@ -1,6 +1,5 @@
 name = Satellite Passage Module
-description = "OL map showing the KML file from ESA with future acquisition plans on top of a basis map"
+description = "OL5 map diplaying Sentinel-1 and Sentinel-2 future acquisition plans as retrived from ESA website"
 core = 7.x
 
-scripts[] = js/olmap_slider.js
-
+dependencies[] = drupal:libraries

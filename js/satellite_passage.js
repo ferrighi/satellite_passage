@@ -1,44 +1,19 @@
 // define some interesting projections
 // WGS 84 / EPSG Norway Polar Stereographic
-proj4.defs('EPSG:5939', '+proj=stere +lat_0=90 +lat_ts=90 +lon_0=18 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs');
-var proj5939 = ol.proj.get('EPSG:5939');
-var ex5939 = [-7021620.2399999998, -6741017.03, 10047367.779999999, 8027970.99];
-proj5939.setExtent(ex5939);
-ol.proj.addProjection(proj5939);
-
-// WGS 84 -- WGS84 - World Geodetic System 1984
-proj4.defs('EPSG:4326','+proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees');
-var proj4326 = ol.proj.get('EPSG:4326');
-var ex4326 = [-90, 30, 90, 90];
-proj4326.setExtent(ex4326);
-ol.proj.addProjection(proj4326);
-
-// WGS 84 / North Pole LAEA Europe
-proj4.defs('EPSG:3575','+proj=laea +lat_0=90 +lon_0=10 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
-var proj3575 = ol.proj.get('EPSG:3575');
-var ex3575 = [-3e+06,-3e+06,7e+06,7e+06];
-proj3575.setExtent(ex3575);
-ol.proj.addProjection(proj3575);
-
-// WGS 84 / UPS North (N,E)
 proj4.defs('EPSG:32661', '+proj=stere +lat_0=90 +lat_ts=90 +lon_0=0 +k=0.994 +x_0=2000000 +y_0=2000000 +datum=WGS84 +units=m +no_defs');
-var proj32661 = ol.proj.get('EPSG:32661');
-var ex32661 = [-4e+06,-6e+06,8e+06,8e+06];
-proj32661.setExtent(ex32661);
-ol.proj.addProjection(proj32661);
+ol.proj.proj4.register(proj4);
 
-//var ext = ex5939;
-//var prj = proj5939;
-var ext = ex32661;
+var proj32661 = new ol.proj.Projection({
+  code: 'EPSG:32661',
+  extent: [-4e+06,-6e+06,8e+06,8e+06]
+});
+
 var prj = proj32661;
-//var ext = ex3575;
-//var prj = proj3575;
-//var ext = ex4326;
-//var prj = proj4326;
 
 var tromsoLonLat = [19, 68];
 var tromsoTrans = ol.proj.transform(tromsoLonLat, "EPSG:4326",  prj);
 
+var site_name = Drupal.settings.site_name;
 
 var layer = {};
 
@@ -54,7 +29,7 @@ layer['base']  = new ol.layer.Tile({
 layer['kml1A'] = new ol.layer.Vector({
    title: 'Sentinel-1A',
    source: new ol.source.Vector({
-       url: '/sites/satellittdata.metsis.met.no/files/kml/S1A_acquisition_plan_norwAOI.kml',
+       url: '/sites/'+site_name+'/files/kml/S1A_acquisition_plan_norwAOI.kml',
        format: new ol.format.KML({extractStyles: false, extractAttributes: true}),
    })
 })
@@ -63,7 +38,7 @@ layer['kml1A'] = new ol.layer.Vector({
 layer['kml1B'] = new ol.layer.Vector({
    title: 'Sentinel-1B',
    source: new ol.source.Vector({
-       url: '/sites/satellittdata.metsis.met.no/files/kml/S1B_acquisition_plan_norwAOI.kml',
+       url: '/sites/'+site_name+'/files/kml/S1B_acquisition_plan_norwAOI.kml',
        format: new ol.format.KML({extractStyles: false, extractAttributes: true}),
    })
 })
@@ -71,7 +46,7 @@ layer['kml1B'] = new ol.layer.Vector({
 layer['kml2A'] = new ol.layer.Vector({
    title: 'Sentinel-2A',
    source: new ol.source.Vector({
-       url: '/sites/satellittdata.metsis.met.no/files/kml/S2A_acquisition_plan_norwAOI.kml',
+       url: '/sites/'+site_name+'/files/kml/S2A_acquisition_plan_norwAOI.kml',
        format: new ol.format.KML({extractStyles: false, extractAttributes: true}),
    })
 })
@@ -80,7 +55,7 @@ layer['kml2A'] = new ol.layer.Vector({
 layer['kml2B'] = new ol.layer.Vector({
    title: 'Sentinel-2B',
    source: new ol.source.Vector({
-       url: '/sites/satellittdata.metsis.met.no/files/kml/S2B_acquisition_plan_norwAOI.kml',
+       url: '/sites/'+site_name+'/files/kml/S2B_acquisition_plan_norwAOI.kml',
        format: new ol.format.KML({extractStyles: false, extractAttributes: true}),
    })
 })
@@ -99,8 +74,7 @@ var map = new ol.Map({
                  zoom: 2, 
                  minZoom: 2,
                  center: tromsoTrans,
-                 projection: prj,
-                 extent: ext
+                 projection: prj
    })
 });
 var layerSwitcher = new ol.control.LayerSwitcher({});
@@ -257,29 +231,7 @@ listenerKey["kml1B"] = layer["kml1B"].getSource().on('change', listenerAllLayers
 listenerKey["kml2A"] = layer["kml2A"].getSource().on('change', listenerAllLayers);
 listenerKey["kml2B"] = layer["kml2B"].getSource().on('change', listenerAllLayers);
 
-var viewProjSelect = document.getElementById('view-projection');
-function updateViewProjection() {
-  var newProj = ol.proj.get(viewProjSelect.value);
-  var newProjExtent = newProj.getExtent();
-  var newView = new ol.View({
-    projection: newProj,
-    center: ol.proj.transform(tromsoLonLat, "EPSG:4326",  newProj),
-    zoom: 2.5,
-    minZoom: 2,
-    extent: newProjExtent || undefined
-  });
-  map.setView(newView);
-};
-
-//viewProjSelect.onchange = function() {
-//  updateViewProjection();
-//};
-
-//updateViewProjection();
-
-
 var info = $('#info');
-window.lara_info = info;
 
 // Create the function that manages the passing and clicking of the mouse. When only passing the doPopup is false, when clicking the doPopup
 // is true. In addition when passing by with the mouse the feature changes color. 
