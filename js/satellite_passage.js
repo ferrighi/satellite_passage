@@ -5,15 +5,19 @@ ol.proj.proj4.register(proj4);
 
 var proj32661 = new ol.proj.Projection({
   code: 'EPSG:32661',
-  extent: [-4e+06,-6e+06,8e+06,8e+06]
+  extent: [-20e+06,-20e+06,20e+06,20e+06]
 });
 
 var prj = proj32661;
 
-var tromsoLonLat = [19, 68];
-var tromsoTrans = ol.proj.transform(tromsoLonLat, "EPSG:4326",  prj);
-
 var site_name = Drupal.settings.site_name;
+var zoom = Drupal.settings.zoom;
+var center_lat = Drupal.settings.center_lat;
+var center_lon = Drupal.settings.center_lon;
+
+var centerLonLat = [center_lon, center_lat];
+var centerTrans = ol.proj.transform(centerLonLat, "EPSG:4326",  prj);
+
 
 var layer = {};
 
@@ -71,15 +75,23 @@ var map = new ol.Map({
              layer['kml2B']
            ],
    view: new ol.View({
-                 zoom: 2, 
+                 zoom: zoom, 
                  minZoom: 2,
-                 center: tromsoTrans,
+                 center: centerTrans,
                  projection: prj
    })
 });
+//Layer switcher
 var layerSwitcher = new ol.control.LayerSwitcher({});
 map.addControl(layerSwitcher);
 layerSwitcher.showPanel();
+
+//Zoom to extent
+var zoomToExtentControl = new ol.control.ZoomToExtent({
+});
+map.addControl(zoomToExtentControl);
+
+
 
 //Mouseposition
 var mousePositionControl = new ol.control.MousePosition({

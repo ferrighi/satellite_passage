@@ -16,7 +16,8 @@
   top: 100px;
 }
 .block-satellite-passage .popover table tr td {
-  padding: 0 2px 0 2px;
+  padding: 2px;
+  font-size: 14px;
 }
 .block-satellite-passage .popover.top {
   left:10px;
@@ -40,12 +41,9 @@
     border-width: 1px;
     cursor: pointer;
 }
-.block-satellite-passage .controls {
-    text-align: center;
- }
 .block-satellite-passage .date {
     border:unset;
-    width: 300px;
+    width: 30em;
  }
 .block-satellite-passage .ol-mouse-position {
     font-size: 14px;

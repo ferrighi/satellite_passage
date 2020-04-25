@@ -1,4 +1,4 @@
-## satellite_passage
+## Satellite Passage
 This module uses a OL5 map to diplay Sentinel-1 and Sentinel-2 future acquisition plans as retrived from ESA: 
 
 - https://sentinel.esa.int/web/sentinel/missions/sentinel-1/observation-scenario/acquisition-segments
@@ -17,3 +17,9 @@ Filtering for specific satellites can be achieved using the layer switcher icon 
 
 # dependecies
 This modules depend on libraries, OL5 and ol-switcher, and requires kml files to be available under the files/kml folder.
+
+# how to enable the module 
+The module creates a block "Sentinel Passage" that can be placed on any page. 
+
+# configuration
+The zoom, and center of map can be configured in the administration page.

@@ -8,6 +8,23 @@ function satellite_passage_block_info() {
    return $blocks;
 }
 
+function satellite_passage_menu() {
+  $items = array();
+
+  // create landing page administrative page
+  $items['admin/config/services/satellite-passage'] = array(
+    'title' => 'Satellite Passage Module configuration',
+    'description' => 'Configuration for the Satellite Passage Module map',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('satellite_passage_admin'),
+    'access arguments' => array('access administration pages'),
+    'file' => 'satellite_passage.admin.inc',
+  );
+
+  return $items;
+}
+
+
 function satellite_passage_block_view($delta='') {
    $block = array();
    switch ($delta) {
@@ -27,25 +44,32 @@ function satellite_passage_main_content(){
    $ol5_path = libraries_get_path('openlayers5');
    $ol_switcher_path = libraries_get_path('ol-layerswitcher');
    $jq_path = drupal_get_path('module', 'jquery_update');
+   drupal_add_js($jq_path . '/replace/jquery/1.10/jquery.min.js');
  
    drupal_add_css($mpath . '/css/satellite_passage_style.css');
    drupal_add_css($ol5_path . '/css/ol.css');
-   drupal_add_css($ol_switcher_path . '/scr/ol-layerswitcher.css');
+   drupal_add_css($ol_switcher_path . '/src/ol-layerswitcher.css');
+   drupal_add_css($ol5_path . '/apidoc/styles/bootstrap.min.css');
  
    drupal_add_js($ol5_path . '/build/ol.js');
-   drupal_add_js($ol_switcher_path . '/build/ol-layerswitcher.js');
+   drupal_add_js($ol_switcher_path . '/dist/ol-layerswitcher.js');
+   drupal_add_js($ol5_path . '/apidoc/scripts/bootstrap.min.js');
    drupal_add_js('https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js', 'external');
-   drupal_add_js(array('site_name' => $site_name), 'setting');
 
+   //get configuration parameters or defaults
+   $zoom = variable_get('zoom') ?: '4';
+   $center_lat = variable_get('center_lat') ?: '69';
+   $center_lon = variable_get('center_lon') ?: '19';
 
-    //<link rel="stylesheet" href="/sites/satellittdata.metsis.met.no/libraries/openlayers3/apidoc/styles/bootstrap.min.css">
-    //<script src="/sites/all/modules/jquery_update/replace/jquery/1.10/jquery.min.js"></script>
-    //<script src="/sites/satellittdata.metsis.met.no/libraries/openlayers3/apidoc/scripts/bootstrap.min.js"></script>
+   drupal_add_js(array('site_name' => $site_name, 
+                       'zoom' => $zoom,
+                       'center_lat' => $center_lat,
+                       'center_lon' => $center_lon), 'setting');
+
 
 return '
     <div id="map" class="map"></div>
     <div id="info"></div>
-
 
     <div class="controls">
         <label>Acquisition Start:</label>
@@ -63,4 +87,3 @@ return '
 ';
 
 }
-?>
